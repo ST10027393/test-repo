@@ -1,0 +1,46 @@
+@model TechMove_GLMS.Models.ServiceRequest
+@{ ViewData["Title"] = "Book Freight Request"; }
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-5">
+                <h4 class="card-title text-primary mb-4">Book Freight Job (API Linked)</h4>
+                
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label fw-bold">Parent SLA Contract (State Verified)</label>
+                        <select name="ContractId" class="form-control select2-searchable" asp-items="ViewBag.Contracts" required>
+                            <option value="">-- Select Active Contract --</option>
+                        </select>
+                        <small class="text-muted">The State Pattern will reject this submission if the SLA is expired.</small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="control-label fw-bold">Job Description</label>
+                        <input name="Description" class="form-control" required />
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold">Foreign Cost (Value)</label>
+                            <input name="ForeignCost" type="number" step="0.01" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold">Currency Code</label>
+                            <select name="ForeignCurrencyCode" class="form-select" required>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="JPY">JPY - Japanese Yen</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary px-4">Process Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Command Center";
+    var currentRole = Context.Session.GetString("userRole");
+    bool isAdmin = currentRole == "Admin";
+}
+
+<div class="text-center mt-5 mb-5">
+    <h1 class="display-4 fw-bold text-primary">TechMove Logistics Hub</h1>
+    <p class="lead text-muted">Enterprise Contract & Freight Management System</p>
+</div>
+
+<div class="row g-4 justify-content-center">
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-primary text-center">
+            <div class="card-body">
+                <h1 class="text-primary mb-3"><i class="bi bi-buildings"></i></h1>
+                <h5 class="card-title fw-bold">Client Directory</h5>
+                <p class="card-text text-muted small">Manage corporate accounts and business entities.</p>
+                <a asp-controller="Clients" asp-action="Index" class="btn btn-outline-primary w-100">View Clients</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-success text-center">
+            <div class="card-body">
+                <h1 class="text-success mb-3"><i class="bi bi-file-earmark-text"></i></h1>
+                <h5 class="card-title fw-bold">SLA Contracts</h5>
+                <p class="card-text text-muted small">Manage lifecycles, files, and state pattern rules.</p>
+                <a asp-controller="Contracts" asp-action="Index" class="btn btn-outline-success w-100">View Contracts</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card h-100 shadow-sm border-info text-center">
+            <div class="card-body">
+                <h1 class="text-info mb-3"><i class="bi bi-truck"></i></h1>
+                <h5 class="card-title fw-bold">Freight Jobs</h5>
+                <p class="card-text text-muted small">Process jobs via External Currency API integrations.</p>
+                <a asp-controller="ServiceRequests" asp-action="Index" class="btn btn-outline-info w-100">View Jobs</a>
+            </div>
+        </div>
+    </div>
+
+    @if (isAdmin)
+    {
+        <div class="col-md-3">
+            <div class="card h-100 shadow border-warning text-center bg-light">
+                <div class="card-body">
+                    <h1 class="text-warning mb-3"><i class="bi bi-shield-lock-fill"></i></h1>
+                    <h5 class="card-title fw-bold">System Users</h5>
+                    <p class="card-text text-muted small">Elevated privilege: Sync Local SQL with Firebase.</p>
+                    <a asp-controller="Users" asp-action="Index" class="btn btn-warning w-100">Manage Access</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

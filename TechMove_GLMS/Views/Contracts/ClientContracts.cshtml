@@ -1,0 +1,65 @@
+@model IEnumerable<TechMove_GLMS.Models.Contract>
+
+@{
+    ViewData["Title"] = "Client Contracts";
+    bool isAdmin = ViewBag.CurrentRole == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="text-primary fw-bold">
+        @(Model.FirstOrDefault()?.Client.Name ?? "Client") SLAs
+    </h2>
+    <div>
+        <a asp-controller="Clients" asp-action="Index" class="btn btn-outline-secondary shadow-sm me-2">Back to Clients</a>
+        <a asp-action="Create" class="btn btn-primary shadow-sm">+ Generate SLA</a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Contract ID</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    @if (isAdmin) { <th>Managed By</th> }
+                    <th class="text-end">Document</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(!Model.Any())
+                {
+                    <tr><td colspan="7" class="text-center text-muted p-4">No active or historical contracts found for this client.</td></tr>
+                }
+                @foreach (var item in Model) {
+                <tr>
+                    <td class="align-middle fw-bold text-muted">#@item.ContractId</td>
+                    <td class="align-middle">
+                        @{
+                            string badgeClass = item.Status switch {
+                                "Active" => "bg-success",
+                                "Expired" => "bg-danger",
+                                "On Hold" => "bg-warning text-dark",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @badgeClass">@item.Status</span>
+                    </td>
+                    <td class="align-middle">Level @item.ServiceLevel</td>
+                    <td class="align-middle">@item.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td class="align-middle">@item.EndDate.ToString("yyyy-MM-dd")</td>
+                    @if (isAdmin) { 
+                        <td class="align-middle text-primary fw-bold">@item.AssignedTo</td> 
+                    }
+                    <td class="text-end align-middle">
+                        <a href="@item.SignedAgreementFilePath" target="_blank" class="btn btn-sm btn-outline-info">View PDF</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

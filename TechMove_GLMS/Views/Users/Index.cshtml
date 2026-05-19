@@ -1,0 +1,51 @@
+@model IEnumerable<TechMove_GLMS.Models.User>
+
+@{
+    ViewData["Title"] = "System Users";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="text-warning fw-bold"><i class="bi bi-shield-lock-fill"></i> System Users</h2>
+    
+    <a asp-controller="Auth" asp-action="Register" class="btn btn-warning shadow-sm">
+        <i class="bi bi-person-plus-fill"></i> Register New User
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success shadow-sm">@TempData["SuccessMessage"]</div>
+}
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>System Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="3" class="text-center text-muted p-4">No users found in the system.</td></tr>
+                }
+                @foreach (var user in Model) 
+                {
+                    <tr>
+                        <td class="align-middle fw-bold">@user.FirstName @user.Surname</td>
+                        <td class="align-middle">@user.Email</td>
+                        <td class="align-middle">
+                            @{
+                                string badgeClass = user.Role == "Admin" ? "bg-warning text-dark" : "bg-primary";
+                            }
+                            <span class="badge @badgeClass">@user.Role</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

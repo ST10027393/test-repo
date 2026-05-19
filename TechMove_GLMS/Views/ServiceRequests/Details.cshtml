@@ -1,0 +1,50 @@
+@model TechMove_GLMS.Models.ServiceRequest
+@{ ViewData["Title"] = "Request Details"; }
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-info text-white fw-bold">
+                <i class="bi bi-info-circle"></i> Service Request Details
+            </div>
+            <div class="card-body p-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="card-title text-primary mb-0">Freight Job #@Model.RequestId</h4>
+                    <span class="badge bg-secondary fs-6">@Model.Status</span>
+                </div>
+                <hr />
+
+                <div class="row mb-4">
+                    <div class="col-sm-4 text-muted fw-bold">Associated SLA:</div>
+                    <div class="col-sm-8">Contract #@Model.ContractId (@Model.Contract.Client.Name)</div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-sm-4 text-muted fw-bold">Job Description:</div>
+                    <div class="col-sm-8">@Model.Description</div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-sm-4 text-muted fw-bold">Managed By:</div>
+                    <div class="col-sm-8 text-primary fw-bold">@Model.AssignedTo</div>
+                </div>
+
+                <div class="row mb-4 bg-light p-3 rounded border">
+                    <div class="col-sm-6 border-end">
+                        <small class="text-muted fw-bold d-block">Foreign Cost</small>
+                        <span class="fs-5">@Model.ForeignCost @Model.ForeignCurrencyCode</span>
+                    </div>
+                    <div class="col-sm-6 ps-4">
+                        <small class="text-muted fw-bold d-block">Local Conversion</small>
+                        <span class="fs-5 fw-bold text-success">R @Model.LocalCostZar</span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model.RequestId" class="btn btn-warning px-4">Edit Request</a>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Return to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

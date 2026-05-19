@@ -1,0 +1,31 @@
+name: GLMS .NET CI Pipeline
+
+on:
+  push:
+    branches: [ "master", "develop" ]
+  pull_request:
+    branches: [ "master", "develop" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 10.0.100
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.100
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Solution
+      run: dotnet build --no-restore --configuration Release
+
+    # This block runs xUnit tests to strictly enforces TDD.
+      # If any test fails, the GitHub Action will fail and block the pull request.
+    - name: Run Unit Tests
+      run: dotnet test --no-build --verbosity normal --configuration Release

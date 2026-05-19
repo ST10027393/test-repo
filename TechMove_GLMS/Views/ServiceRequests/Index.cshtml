@@ -1,0 +1,61 @@
+@model IEnumerable<TechMove_GLMS.Models.ServiceRequest>
+@{ ViewData["Title"] = "Service Requests"; bool isAdmin = ViewBag.CurrentRole == "Admin"; }
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="text-primary fw-bold">Active Freight Requests</h2>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">+ Book Freight Job</a>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search Details or Currency..." />
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Transit">In Transit</option>
+                    <option value="Delivered">Delivered</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <table class="table table-hover table-striped mb-0">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Client / SLA</th>
+                <th>Description</th>
+                <th>Foreign Cost</th>
+                <th>Local Cost (ZAR)</th>
+                @if(isAdmin) { <th>Assigned To</th> }
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+            <tr>
+                <td class="align-middle fw-bold text-muted">#@item.RequestId</td>
+                <td class="align-middle">@item.Contract.Client.Name <br/><small>SLA #@item.ContractId</small></td>
+                <td class="align-middle">@item.Description</td>
+                <td class="align-middle">@item.ForeignCost @item.ForeignCurrencyCode</td>
+                <td class="align-middle fw-bold text-success">R @item.LocalCostZar</td>
+                @if(isAdmin) { <td class="align-middle text-primary fw-bold">@item.AssignedTo</td> }
+                <td class="text-end align-middle">
+                    <a asp-action="Details" asp-route-id="@item.RequestId" class="btn btn-sm btn-outline-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@item.RequestId" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.RequestId" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

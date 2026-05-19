@@ -1,0 +1,47 @@
+@model TechMove_GLMS.Models.ServiceRequest
+@{ ViewData["Title"] = "Edit Request"; bool isAdmin = ViewBag.CurrentRole == "Admin"; }
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-5">
+                <h4 class="text-warning mb-4">Edit Request #@Model.RequestId</h4>
+                
+                <form asp-action="Edit">
+                    <input type="hidden" asp-for="RequestId" />
+                    <input type="hidden" asp-for="ContractId" />
+                    <input type="hidden" asp-for="ForeignCost" />
+                    <input type="hidden" asp-for="ForeignCurrencyCode" />
+                    <input type="hidden" asp-for="LocalCostZar" />
+                    @if (!isAdmin) { <input type="hidden" asp-for="AssignedTo" /> }
+
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Description</label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="fw-bold">Job Status</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="Pending">Pending</option>
+                            <option value="In Transit">In Transit</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    @if (isAdmin)
+                    {
+                        <div class="form-group mb-4 p-3 bg-light border rounded">
+                            <label class="fw-bold text-danger">Reassign Service Request</label>
+                            <select asp-for="AssignedTo" class="form-select border-danger" asp-items="ViewBag.Assignees"></select>
+                            <small class="text-muted">Admin privilege: Transfer workflow ownership.</small>
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-warning">Update Freight Job</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

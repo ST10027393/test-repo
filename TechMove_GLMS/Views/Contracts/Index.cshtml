@@ -1,0 +1,97 @@
+@model IEnumerable<TechMove_GLMS.Models.Contract>
+
+@{
+    ViewData["Title"] = "Contract Hub";
+    bool isAdmin = ViewBag.CurrentRole == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="text-primary fw-bold">SLA Contract Hub</h2>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">+ Generate SLA</a>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-2">
+                <input type="text" name="search" class="form-control" placeholder="Search Client..." />
+            </div>
+            <div class="col-md-2">
+                <select name="status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="Active">Active</option>
+                    <option value="Draft">Draft</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Expired">Expired</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="start" class="form-control" title="Start Date" />
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="end" class="form-control" title="End Date" />
+            </div>
+            @if (isAdmin)
+            {
+                <div class="col-md-2">
+                    <input type="text" name="assignedTo" class="form-control" placeholder="Account Mgr..." />
+                </div>
+            }
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-secondary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    @if (isAdmin) { <th>Managed By</th> }
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                <tr>
+                    <td class="align-middle fw-bold text-muted">#@item.ContractId</td>
+                    <td class="align-middle fw-bold">@item.Client.Name</td>
+                    <td class="align-middle">Level @item.ServiceLevel</td>
+                    <td class="align-middle">
+                        @{
+                            string badgeClass = item.Status switch {
+                                "Active" => "bg-success",
+                                "Expired" => "bg-danger",
+                                "On Hold" => "bg-warning text-dark",
+                                _ => "bg-secondary"
+                            };
+                        }
+                        <span class="badge @badgeClass">@item.Status</span>
+                    </td>
+                    <td class="align-middle">@item.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td class="align-middle">@item.EndDate.ToString("yyyy-MM-dd")</td>
+                    @if (isAdmin) { 
+                        <td class="align-middle text-primary fw-bold">@item.AssignedTo</td> 
+                    }
+                    <td class="text-end align-middle">
+                        <a href="@item.SignedAgreementFilePath" target="_blank" class="btn btn-sm btn-outline-info" title="Download PDF"><i class="bi bi-file-earmark-pdf"></i> PDF</a>
+                        @if (isAdmin) {
+                            <a asp-action="Reassign" asp-route-id="@item.ContractId" class="btn btn-sm btn-warning">Reassign</a>
+                        }
+                        <a asp-action="Edit" asp-route-id="@item.ContractId" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.ContractId" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

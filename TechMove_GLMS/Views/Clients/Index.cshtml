@@ -1,0 +1,88 @@
+@model IEnumerable<TechMove_GLMS.Models.Client>
+
+@{
+    ViewData["Title"] = "Global Clients";
+    bool isAdmin = ViewBag.CurrentRole == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 mt-4">
+    <h2 class="text-primary fw-bold">Client Directory</h2>
+    <a asp-action="Create" class="btn btn-primary shadow-sm">+ Add New Client</a>
+</div>
+
+<div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search Name or Email..." />
+            </div>
+            <div class="col-md-2">
+                <select name="region" class="form-select" asp-items="ViewBag.Regions">
+                    <option value="">All Regions</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="date" class="form-control" />
+            </div>
+            
+            @if (isAdmin)
+            {
+                <div class="col-md-3">
+                    <input type="text" name="assignedTo" class="form-control" placeholder="Filter by Assigned User..." />
+                </div>
+            }
+            
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-secondary">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Company Name</th>
+                    <th>Region</th>
+                    <th>Currency</th>
+                    <th>Created</th>
+                    @if (isAdmin) { <th>Assigned To</th> }
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                <tr>
+                    <td class="align-middle fw-bold">
+                        @item.Name <br/>
+                        <small class="text-muted fw-normal">@item.ContactDetails</small>
+                    </td>
+                    <td class="align-middle">@item.Region</td>
+                    <td class="align-middle"><span class="badge bg-success">@item.CurrencyCode</span></td>
+                    <td class="align-middle">@item.CreatedAt.ToShortDateString()</td>
+                    
+                    @if (isAdmin) { 
+                        <td class="align-middle text-primary fw-bold">@item.AssignedTo</td> 
+                    }
+                    
+                    <td class="text-end align-middle">
+                        <a 
+                        asp-controller="Contracts" 
+                        asp-action="ClientContracts" 
+                        asp-route-id="@item.ClientId" 
+                        class="btn btn-sm btn-outline-primary">
+                        Contracts
+                        </a>
+                        
+                        <a asp-action="Edit" asp-route-id="@item.ClientId" class="btn btn-sm btn-warning">Edit</a>
+                        
+                        <a asp-action="Delete" asp-route-id="@item.ClientId" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

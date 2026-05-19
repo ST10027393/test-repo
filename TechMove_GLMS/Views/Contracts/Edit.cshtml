@@ -1,0 +1,65 @@
+@model TechMove_GLMS.Models.Contract
+@{ ViewData["Title"] = "Edit Contract"; }
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-5">
+                <h4 class="card-title text-warning mb-4">Edit Contract #@Model.ContractId</h4>
+                <h6 class="text-muted mb-4">@Model.Client?.Name | Manager: @Model.AssignedTo</h6>
+                <hr />
+                
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="ContractId" />
+                    <input type="hidden" asp-for="ClientId" />
+                    <input type="hidden" asp-for="AssignedTo" />
+                    <input type="hidden" asp-for="SignedAgreementFilePath" />
+
+                    <div class="row mb-3">
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold">Start Date</label>
+                            <input type="date" asp-for="StartDate" class="form-control" required />
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold">End Date</label>
+                            <input type="date" asp-for="EndDate" class="form-control" required />
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold">Service Level</label>
+                            <select asp-for="ServiceLevel" class="form-select" required>
+                                <option value="1">Level 1 (Highest Priority)</option>
+                                <option value="2">Level 2</option>
+                                <option value="3">Level 3 (Standard)</option>
+                                <option value="4">Level 4</option>
+                                <option value="5">Level 5 (Lowest Priority)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label class="control-label fw-bold text-danger">Status (Triggers Observer)</label>
+                            <select asp-for="Status" class="form-select border-danger" required>
+                                <option value="Draft">Draft</option>
+                                <option value="Active">Active</option>
+                                <option value="On Hold">On Hold</option>
+                                <option value="Expired">Expired</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4 p-3 bg-light border rounded">
+                        <label class="control-label fw-bold">Replace PDF Agreement (Optional)</label>
+                        <p class="small text-muted mb-2">Leave blank to keep the existing document: <a href="@Model.SignedAgreementFilePath" target="_blank">View Current</a></p>
+                        <input type="file" name="newAgreementFile" class="form-control" accept="application/pdf" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning px-4">Update Contract</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
